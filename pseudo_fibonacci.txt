@@ -27,7 +27,7 @@
 0xA6 STORE_M (0x0D)    ; 0x0D = 1, o segundo valor da sequência
 0xA7 LOAD_M (0x0B)     ; Carrega 0x0B(N) no registrador AC
 0xA8 SUB_M (0x04)      ; Subtrai um de 0x0B(N) no registrador AC
-0xA9 JUMP+_M (0xC4)    ; Se 0x0B(N) == 1, salta para 0xFF(fim do programa)
+0xA9 JUMP+_M (0xFF)    ; Se 0x0B(N) == 1, salta para 0xFF(fim do programa)
 0xB2 LOAD_M (0x0D)     ; Carrega 0x0D no registrador AC
 0xB3 ADD_M (0x0C)      ; AC = 0x0D + 0x0C (próximo Fibonacci)
 0xB4 STORE_M (0x0E)    ; Armazena o novo valor Fibonacci em 0x0E
