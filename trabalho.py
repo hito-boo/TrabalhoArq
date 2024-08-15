@@ -1,3 +1,5 @@
+# Vitor da Rocha Machado, RA: 132769|Caetano Vendrame Mantovani, RA: 135846|Matheus Cenerini Jacomini, RA 134700
+
 from sys import argv
 import io
 
