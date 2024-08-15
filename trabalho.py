@@ -8,13 +8,14 @@ import io
 # Função principal ----------------------------------------------------------------------------------------
 
 def main() -> None:
+    # Esperando: python trabalho.py nome_arquivo_memoria endereco_primeira_instrucao
     if len(argv) == 3:
         try:
             memoria = open(argv[1], 'r+')
         except FileNotFoundError:
             print("\nERRO: Arquivo de memória não encontrado.")
         else:
-            # Constante que guarda o Offset da primeira instrução, para que a busca sequencial de instruções se reduza apenas a elas
+            # Constante que guarda o Offset da primeira instrução, para que a busca sequencial de instruções se reduza apenas a elas.
             global OFFSET_PRIMEIRA_INSTRUCAO
             OFFSET_PRIMEIRA_INSTRUCAO = offset_instrucao(memoria, int(argv[2], 0), 0)
             ciclo_ias(memoria, argv[2])
@@ -29,31 +30,49 @@ def main() -> None:
 def ciclo_ias(memoria: io.TextIOWrapper, endereco_instrucao: str) -> None:
     # Registradores 
     PC: str = endereco_instrucao
-    AC: int = 0; MQ: int = 0; C: int = 2; Z: int = 1; R: int = 0
-    MBR: str = ' '; MAR: str = ''; IR: str = ''
+    AC: int = 0; MQ: int = 0; C: int = 0; Z: int = 0; R: int = 0; AI: int = 0
+    MBR: str = ''; MAR: str = ''; IR: str = ''
 
-    while MBR != '':
+    print('\n\nValores Iniciais')
+    while IR != 'END':
+        # Impressão dos registradores:
+        imprime_registradores(AC, MQ, C, Z, R, PC, MBR, MAR, IR)
+
         # Interpretação da instrução:
         MAR = PC
         MBR = leitura_instrucao(memoria, int(MAR, 0))
         IR = MBR.split()[1]
-        MAR = MBR.split()[2][1:5]
+        if len(MBR.split()) > 2:
+            if MBR.split()[2][0] == '(':
+                MAR = MBR.split()[2][1:5]
+            else:
+                AI = int(MBR.split()[2])
 
         # Incrementando PC:
         PC = hex(int(PC, 0) + 1)
 
         # Execução da instrução:
         # Transferência de Dados
+        if IR == 'LOAD':
+            C, AC = verifica_carry(AI)
+            Z = verifica_sinal(AC)
+
         if IR == 'LOAD_M':
             MBR = load(memoria, int(MAR, 0))
             AC = int(MBR)
+            Z = verifica_sinal(AC)
         
         elif IR == 'LOAD_-M':
             MBR = load(memoria, int(MAR, 0))
             AC = -int(MBR)
+            Z = verifica_sinal(AC)
         
         elif IR == 'LOAD_MQ':
-            AC = MQ
+            C, AC = verifica_carry(MQ)
+            Z = verifica_sinal(AC)
+
+        elif IR == 'LOAD_MQ_AI':
+            MQ = AI
 
         elif IR == 'LOAD_MQ_M':
             MBR = load(memoria, int(MAR, 0))
@@ -64,29 +83,46 @@ def ciclo_ias(memoria: io.TextIOWrapper, endereco_instrucao: str) -> None:
             store(memoria, int(MAR, 0), MBR)
 
         # Aritmética de Dados
+        elif IR == 'ADD':
+            AC = AC + AI
+            C, AC = verifica_carry(AC)
+            Z = verifica_sinal(AC)
+
         elif IR == 'ADD_M':
             MBR = load(memoria, int(MAR, 0))
             AC = AC + int(MBR)
-            AC, C = verifica_carry(AC)
+            C, AC = verifica_carry(AC)
+            Z = verifica_sinal(AC)
+
+        elif IR == 'SUB':
+            AC = AC - AI
+            C, AC = verifica_carry(AC)
             Z = verifica_sinal(AC)
 
         elif IR == 'SUB_M':
             MBR = load(memoria, int(MAR, 0))
             AC = AC - int(MBR)
-            AC, C = verifica_carry(AC)
+            C, AC = verifica_carry(AC)
             Z = verifica_sinal(AC)
+
+        elif IR == 'MUL':
+            MQ = MQ * AI
 
         elif IR == 'MUL_M':
             MBR = load(memoria, int(MAR, 0))
             MQ = MQ * int(MBR)
-            AC, C = verifica_carry(AC)
+
+        elif IR == 'DIV':
+            R = AC % AI
+            AC = AC // AI
+            C, AC = verifica_carry(AC)
             Z = verifica_sinal(AC)
 
         elif IR == 'DIV_M':
             MBR = load(memoria, int(MAR, 0))
-            AC = AC / int(MBR)
             R = AC % int(MBR)
-            AC, C = verifica_carry(AC)
+            AC = AC // int(MBR)
+            C, AC = verifica_carry(AC)
             Z = verifica_sinal(AC)
         
         # Desvio
@@ -97,9 +133,6 @@ def ciclo_ias(memoria: io.TextIOWrapper, endereco_instrucao: str) -> None:
             if AC >= 0:
                 PC = MAR
 
-    # Imprimindo os registradores.
-    imprime_registradores(AC, MQ, C, Z, R, PC, MBR, MAR, IR)
-
     return None
 
 # Função que faz a leitura das instruções -----------------------------------------------------------------
@@ -107,17 +140,17 @@ def ciclo_ias(memoria: io.TextIOWrapper, endereco_instrucao: str) -> None:
 def leitura_instrucao(memoria:io.TextIOWrapper, endereco_instrucao: int) -> str:
     # Função que lê a instrução da memória e retorna a instrução.
     memoria.seek(offset_instrucao(memoria, endereco_instrucao, OFFSET_PRIMEIRA_INSTRUCAO))
-    instrucao = memoria.readline()
+    instrucao = memoria.readline().strip()
     return instrucao
 
 def offset_instrucao(memoria: io.TextIOWrapper, endereco_instrucao: int, primeira_instrucao: int) -> int:
     # Função que retorna o Offset de uma instrução
     memoria.seek(primeira_instrucao)
     offset = memoria.tell()
-    endereco_atual = int(memoria.readline().split()[0], 0)
+    endereco_atual = int(memoria.readline().strip().split()[0], 0)
     while endereco_atual != endereco_instrucao and endereco_atual != '':
         offset = memoria.tell()
-        endereco_atual = int(memoria.readline().split()[0], 0)
+        endereco_atual = int(memoria.readline().strip().split()[0], 0)
     return offset
 
 # Funções que realizam as instruções ----------------------------------------------------------------------
@@ -138,10 +171,10 @@ def store(memoria: io.TextIOWrapper, endereco: int, ac: int) -> None:
     # Instrução de escrita na memória, no endereço fornecido.
     memoria.seek(0)
     offset = memoria.tell()
-    endereco_atual = memoria.readline().split()[0]
+    endereco_atual = int(memoria.readline().strip().split()[0], 0)
     while endereco_atual != endereco:
         offset = memoria.tell()
-        endereco_atual = memoria.readline().split()[0]
+        endereco_atual = int(memoria.readline().strip().split()[0], 0)
     memoria.seek(offset + 5)
     memoria.write(tratamento_store_ac(ac))
     return None
@@ -167,8 +200,8 @@ def verifica_sinal(reg: int) -> int:
 
 def verifica_carry(reg: int) -> tuple[int, int]:
     # Função que verifica se houve Carry Out em um registrador.
-    if str(reg) > 4:
-        return 1, reg[:4]
+    if len(str(reg)) > 4:
+        return 1, int(str(reg)[:4])
     else:
         return 2, reg
 
@@ -177,7 +210,7 @@ def verifica_carry(reg: int) -> tuple[int, int]:
 def imprime_registradores(ac: int, mq: int, c: int, z: int, r: int, pc: str, mbr: str, mar: str, ir: str) -> None:
     # Função que imprime os registradores usados no ciclo de instrução.
     print('\nPC atual: ' + pc)
-    print('Registrador do Buffer de Memória: ' + mbr + ' | Registrador do Endereço de Memória: ' + mar + ' | Registrador de Instrução: ' + ir)
+    print('Registrador do Buffer de Memória: ' + str(mbr) + ' | Registrador do Endereço de Memória: ' + mar + ' | Registrador de Instrução: ' + ir)
     print('Acumulador: ' + str(ac) + ' | Multiplicador: ' + str(mq) + ' | Resto da divisão: ' + str(r))
     print('Carry Out: ' + str(c) + ' | Resultado Zero: ' + str(z))
     return None
