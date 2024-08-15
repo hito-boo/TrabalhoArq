@@ -11,7 +11,7 @@ def main() -> None:
     if len(argv) == 3:
         try:
             memoria = open(argv[1], 'r+')
-        except:
+        except FileNotFoundError:
             print("\nERRO: Arquivo de memória não encontrado.")
         else:
             # Constante que guarda o Offset da primeira instrução, para que a busca sequencial de instruções se reduza apenas a elas
@@ -19,6 +19,9 @@ def main() -> None:
             OFFSET_PRIMEIRA_INSTRUCAO = offset_instrucao(memoria, int(argv[2], 0), 0)
             ciclo_ias(memoria, argv[2])
             memoria.close()
+    else:
+        print("\nERRO: Número de argumentos inválido.")
+        print("Modo de uso: python trabalho.py nome_arquivo_memoria endereco_primeira_instrucao")
     return None
 
 # Função de processamento ---------------------------------------------------------------------------------
@@ -102,10 +105,10 @@ def ciclo_ias(memoria: io.TextIOWrapper, endereco_instrucao: str) -> None:
 # Função que faz a leitura das instruções -----------------------------------------------------------------
 
 def leitura_instrucao(memoria:io.TextIOWrapper, endereco_instrucao: int) -> str:
-    instrucao = ''
-    offset = offset_instrucao(memoria, endereco_instrucao, OFFSET_PRIMEIRA_INSTRUCAO)
-    memoria.seek(offset)
-    return memoria.readline().strip()
+    # Função que lê a instrução da memória e retorna a instrução.
+    memoria.seek(offset_instrucao(memoria, endereco_instrucao, OFFSET_PRIMEIRA_INSTRUCAO))
+    instrucao = memoria.readline()
+    return instrucao
 
 def offset_instrucao(memoria: io.TextIOWrapper, endereco_instrucao: int, primeira_instrucao: int) -> int:
     # Função que retorna o Offset de uma instrução
@@ -138,7 +141,7 @@ def store(memoria: io.TextIOWrapper, endereco: int, ac: int) -> None:
     endereco_atual = memoria.readline().split()[0]
     while endereco_atual != endereco:
         offset = memoria.tell()
-        endereco_atual = memoria.readline.split()[0]
+        endereco_atual = memoria.readline().split()[0]
     memoria.seek(offset + 5)
     memoria.write(tratamento_store_ac(ac))
     return None

@@ -1,0 +1,42 @@
+0x00 18  
+0x01 7   
+0x02 14  
+0x03 9   
+0x04 1      ; utilizado para inicializar o primeiro valor da sequência Fibonacci e para decrementar o contador
+0x05 3   
+0x06 43  
+0x07 5      ; utilizado para representar o nésimo valor da sequência Fibonacci
+0x08 0      ; utilizado para inicializar o primeiro valor da sequência Fibonacci
+0x09 102 
+0x0A 9   
+0x0B        ; contador para a quantidade de valores da sequência Fibonacci
+0x0C        ; primeiro valor da sequência Fibonacci
+0x0D        ; segundo valor da sequência Fibonacci
+0x0E        ; próximo valor da sequência Fibonacci
+0x0F     
+0x10     
+0x11     
+0x12     
+0x13     
+0x14   
+0xA1 LOAD_M (0x07)     ; Carrega o valor de 0x07(N) no registrador AC
+0xA2 STORE_M (0x0B)    ; Armazena 0x07 em 0x0B para ser usado no loop
+0xA3 LOAD_M (0x08)     ; Carrega 0x08(vale 0) no registrador AC
+0xA4 STORE_M (0x0C)    ; 0x0C = 0, o primeiro valor da sequência
+0xA5 LOAD_M (0x04)     ; Carrega 0x04(vale 1) no registrador AC
+0xA6 STORE_M (0x0D)    ; 0x0D = 1, o segundo valor da sequência
+0xA7 LOAD_M (0x0B)     ; Carrega 0x0B(N) no registrador AC
+0xA8 SUB_M (0x04)      ; Subtrai um de 0x0B(N) no registrador AC
+0xA9 JUMP+_M (0xC4)    ; Se 0x0B(N) == 1, salta para 0xFF(fim do programa)
+0xB2 LOAD_M (0x0D)     ; Carrega 0x0D no registrador AC
+0xB3 ADD_M (0x0C)      ; AC = 0x0D + 0x0C (próximo Fibonacci)
+0xB4 STORE_M (0x0E)    ; Armazena o novo valor Fibonacci em 0x0E
+0xB5 LOAD_M (0x0D)     ; Carrega 0x0D no registrador AC
+0xB6 STORE_M (0x0C)    ; Atualiza 0x0C = 0x0D
+0xB7 LOAD_M (0x0E)     ; Carrega 0x0E no registrador AC
+0xB8 STORE_M (0x0D)    ; Atualiza 0x0D = 0x0E
+0xB9 LOAD_M (0x0B)     ; Carrega o contador 0x0B
+0xC1 SUB_M (0x04)      ; Decrementa 0x0B
+0xC2 STORE_M (0x0B)    ; Atualiza 0x0B
+0xC3 JUMP+_M (0xB2)    ; Repete o loop se 0x0B > 0
+0xFF                   ; Fim do programa
