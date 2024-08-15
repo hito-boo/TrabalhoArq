@@ -71,9 +71,6 @@ def ciclo_ias(memoria: io.TextIOWrapper, endereco_instrucao: str) -> None:
             C, AC = verifica_carry(MQ)
             Z = verifica_sinal(AC)
 
-        elif IR == 'LOAD_MQ_AI':
-            MQ = AI
-
         elif IR == 'LOAD_MQ_M':
             MBR = load(memoria, int(MAR, 0))
             MQ = int(MBR)
@@ -209,10 +206,10 @@ def verifica_carry(reg: int) -> tuple[int, int]:
 
 def imprime_registradores(ac: int, mq: int, c: int, z: int, r: int, pc: str, mbr: str, mar: str, ir: str) -> None:
     # Função que imprime os registradores usados no ciclo de instrução.
-    print('\nPC atual: ' + pc)
-    print('Registrador do Buffer de Memória: ' + str(mbr) + ' | Registrador do Endereço de Memória: ' + mar + ' | Registrador de Instrução: ' + ir)
-    print('Acumulador: ' + str(ac) + ' | Multiplicador: ' + str(mq) + ' | Resto da divisão: ' + str(r))
-    print('Carry Out: ' + str(c) + ' | Resultado Zero: ' + str(z))
+    print('\nPC: ' + pc)
+    print('MBR: ' + str(mbr) + ' | MAR: ' + mar + ' | IR: ' + ir)
+    print('AC: ' + str(ac) + ' | MQ: ' + str(mq) + ' | R: ' + str(r))
+    print('C: ' + str(c) + ' | Z: ' + str(z))
     return None
 
 # Chamada da função principal ------------------------------------------------------------------------------
