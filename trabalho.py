@@ -136,13 +136,13 @@ def ciclo_ias(memoria: io.TextIOWrapper, endereco_instrucao: str) -> None:
 # Função que faz a leitura das instruções -----------------------------------------------------------------
 
 def leitura_instrucao(memoria:io.TextIOWrapper, endereco_instrucao: int) -> str:
-    # Função que lê a instrução da memória e retorna a instrução.
+    ''' Função que lê a instrução da memória e retorna a instrução. '''
     memoria.seek(offset_instrucao(memoria, endereco_instrucao, OFFSET_PRIMEIRA_INSTRUCAO))
     instrucao = memoria.readline().strip()
     return instrucao
 
 def offset_instrucao(memoria: io.TextIOWrapper, endereco_instrucao: int, primeira_instrucao: int) -> int:
-    # Função que retorna o Offset de uma instrução
+    ''' Função que retorna o Offset de uma instrução. '''
     memoria.seek(primeira_instrucao)
     offset = memoria.tell()
     endereco_atual = int(memoria.readline().strip().split()[0], 0)
@@ -154,7 +154,7 @@ def offset_instrucao(memoria: io.TextIOWrapper, endereco_instrucao: int, primeir
 # Funções que realizam as instruções ----------------------------------------------------------------------
 
 def load(memoria: io.TextIOWrapper, endereco: int) -> str:
-    # Instrução de carregamento de um valor no endereço fornecido em um registrador.
+    ''' Instrução de carregamento de um valor no endereço fornecido em um registrador. '''
     memoria.seek(0)
     leitura = memoria.readline().split()
     endereco_atual = int(leitura[0], 0)
@@ -166,7 +166,7 @@ def load(memoria: io.TextIOWrapper, endereco: int) -> str:
     return dado
 
 def store(memoria: io.TextIOWrapper, endereco: int, ac: int) -> None:
-    # Instrução de escrita na memória, no endereço fornecido.
+    ''' Instrução de escrita na memória, no endereço fornecido. '''
     memoria.seek(0)
     offset = memoria.tell()
     endereco_atual = int(memoria.readline().strip().split()[0], 0)
@@ -178,7 +178,7 @@ def store(memoria: io.TextIOWrapper, endereco: int, ac: int) -> None:
     return None
 
 def tratamento_store_ac(ac: int) -> str:
-    # Trata a quantidade de bytes a ser escrita na memória para manter a estrutura do arquivo correta.
+    ''' Trata a quantidade de bytes a ser escrita na memória para manter a estrutura do arquivo correta. '''
     if ac < -9 or ac > 99:
         acrescimo = ' '
     elif ac < 0 or ac > 9:
@@ -188,7 +188,7 @@ def tratamento_store_ac(ac: int) -> str:
     return str(ac) + acrescimo
 
 def verifica_sinal(reg: int) -> int:
-    # Função que verifica a polaridade de um registrador.
+    ''' Função que verifica a polaridade de um registrador. '''
     if reg < 0:
         return -1
     elif reg == 0:
@@ -197,7 +197,7 @@ def verifica_sinal(reg: int) -> int:
         return 1
 
 def verifica_carry(reg: int) -> tuple[int, int]:
-    # Função que verifica se houve Carry Out em um registrador.
+    ''' Função que verifica se houve Carry Out em um registrador. '''
     if len(str(reg)) > 4:
         return 1, int(str(reg)[:4])
     else:
@@ -206,7 +206,7 @@ def verifica_carry(reg: int) -> tuple[int, int]:
 # Função que imprime os registradores ----------------------------------------------------------------------
 
 def imprime_registradores(ac: int, mq: int, c: int, z: int, r: int, pc: str, mbr: str, mar: str, ir: str) -> None:
-    # Função que imprime os registradores usados no ciclo de instrução.
+    ''' Função que imprime os registradores usados no ciclo de instrução. '''
     print('\nPC: ' + pc)
     print('MBR: ' + str(mbr) + ' | MAR: ' + mar + ' | IR: ' + ir)
     print('AC: ' + str(ac) + ' | MQ: ' + str(mq) + ' | R: ' + str(r))
