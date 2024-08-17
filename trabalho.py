@@ -11,11 +11,12 @@ def main() -> None:
     # Esperando: python trabalho.py nome_arquivo_memoria endereco_primeira_instrucao
     if len(argv) == 3:
         try:
+            # memoria = open(nome_arquivo_memoria, 'r+')
             memoria = open(argv[1], 'r+')
         except FileNotFoundError:
             print("\nERRO: Arquivo de memória não encontrado.")
         else:
-            # Constante que guarda o Offset da primeira instrução, para que a busca sequencial de instruções se reduza apenas a elas.
+            # Constante que guarda o Offset da primeira instrução para que a busca sequencial de instruções se reduza apenas a elas.
             global OFFSET_PRIMEIRA_INSTRUCAO
             OFFSET_PRIMEIRA_INSTRUCAO = offset_instrucao(memoria, int(argv[2], 0), 0)
             ciclo_ias(memoria, argv[2])
@@ -177,7 +178,7 @@ def store(memoria: io.TextIOWrapper, endereco: int, ac: int) -> None:
     return None
 
 def tratamento_store_ac(ac: int) -> str:
-    # Trata a quantidade de bytes a ser escrita na memória, para manter a estrutura do arquivo correta.
+    # Trata a quantidade de bytes a ser escrita na memória para manter a estrutura do arquivo correta.
     if ac < -9 or ac > 99:
         acrescimo = ' '
     elif ac < 0 or ac > 9:
