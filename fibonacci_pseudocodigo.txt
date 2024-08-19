@@ -1,61 +1,46 @@
-0x00 18  
-0x01 7   
-0x02 14  
-0x03 9   
-0x04 1   
-0x05 3   
-0x06 43  
-0x07 5      ; utilizado para representar o nésimo valor da sequência Fibonacci
-0x08 0   
-0x09 102 
-0x0A 9   
-0x0B        ; contador para a quantidade de valores da sequência Fibonacci
-0x0C        ; primeiro valor da sequência Fibonacci e resultado do programa caso N = 1
-0x0D        ; segundo valor da sequência Fibonacci e resultado do programa caso N = 2
-0x0E        ; resultado do programa caso N >= 3
-0x0F     
-0x10     
-0x11     
-0x12     
-0x13     
-0x14   
+DADOS
+    0x00 5      ; utilizado para representar o nésimo valor da sequência Fibonacci
+    0x01        ; contador para a quantidade de valores da sequência Fibonacci
+    0x02        ; primeiro valor da sequência Fibonacci e resultado do programa caso N = 1
+    0x03        ; segundo valor da sequência Fibonacci e resultado do programa caso N = 2
+    0x04        ; resultado do programa caso N >= 3
 
 INICIALIZA VALORES:
-    0xA1 LOAD_M (0x07)     ; Carrega o valor de N no registrador AC
-    0xA2 STORE_M (0x0B)    ; Armazena o valor de N em 0x0B (i)
+    0x05 LOAD_M (0x00)     ; Carrega o valor de N no registrador AC
+    0x06 STORE_M (0x01)    ; Armazena o valor de N em 0x01 (i)
 
-    0xA3 LOAD 0            ; Carrega o valor 0 no registrador AC
-    0xA4 STORE_M (0x0C)    ; Armazena o valor 0 em 0x0C, o primeiro valor da sequência
+    0x07 LOAD 1            ; Carrega o valor 1 no registrador AC
+    0x08 STORE_M (0x02)    ; Armazena o valor 1 em 0x02, o primeiro valor da sequência
 
-    0xA5 LOAD 1            ; Carrega o valor 1 no registrador AC
-    0xA6 STORE_M (0x0D)    ; Armazena o valor 1 em 0x0D, o segundo valor da sequência
+    0x09 LOAD 1            ; Carrega o valor 1 no registrador AC
+    0x0A STORE_M (0x03)    ; Armazena o valor 1 em 0x03, o segundo valor da sequência
 
-    0xA7 LOAD_M (0x0B)     ; Carrega o valor de N no registrador AC
-    0xA8 SUB 3             ; Subtrai 3 de N no AC
-    0xA9 JUMP_+M (0xB1)    ; Se N >= 3, salta para o início do loop
+    0x0B LOAD_M (0x01)     ; Carrega o valor de N no registrador AC
+    0x0C SUB 3             ; Subtrai 3 de N no AC
+    0x0D JUMP_+M (0x0F)    ; Se N >= 3, salta para o início do loop
 
-    0xAA JUMP_M (0xFF)     ; Senão, fim do programa (N < 3) e portanto se N = 1 a resposta estará em 0x0C e se N = 2 a resposta estará em 0x0D
+    0x0E JUMP_M (0x1D)     ; Senão, fim do programa (N < 3) e portanto se N = 1 a resposta estará em 0x02 e se N = 2 a resposta estará em 0x04
 
 LOOP:
-    0xB1 LOAD_M (0x0B)     ; Carrega o contador i no registrador AC
-    0xB2 SUB 1             ; Subtrai um de i no registrador AC
-    0xB3 STORE_M (0x0B)    ; Armazena o novo valor de i em 0x0B
+    0x0F LOAD_M (0x01)     ; Carrega o contador i no registrador AC
+    0x10 SUB 1             ; Subtrai um de i no registrador AC
+    0x11 STORE_M (0x01)    ; Armazena o novo valor de i em 0x0B
 
-    0xB4 LOAD_M (0x0C)     ; Carrega o primeiro valor da sequencia no registrador AC
-    0xB5 ADD_M (0x0D)      ; Soma com o segundo valor da sequência
-    0xB6 STORE_M (0x0E)    ; Armazena o resultado da soma em 0x0F
+    0x12 LOAD_M (0x02)     ; Carrega o primeiro valor da sequencia no registrador AC
+    0x13 ADD_M (0x03)      ; Soma com o segundo valor da sequência
+    0x14 STORE_M (0x04)    ; Armazena o resultado da soma em 0x04
 
-    0xB7 LOAD_M (0x0D)     ; Carrega o segundo valor da sequência
-    0xB8 STORE_M (0x0C)    ; Armazena o segundo valor da sequência no primeiro valor da sequência
+    0x15 LOAD_M (0x03)     ; Carrega o segundo valor da sequência
+    0x16 STORE_M (0x02)    ; Armazena o segundo valor da sequência no primeiro valor da sequência
 
-    0xB9 LOAD_M (0x0E)     ; Carrega o próximo valor da sequência
-    0xBA STORE_M (0x0D)    ; Armazena o próximo valor da sequência no segundo valor da sequência
+    0x17 LOAD_M (0x04)     ; Carrega o próximo valor da sequência
+    0x18 STORE_M (0x03)    ; Armazena o próximo valor da sequência no segundo valor da sequência
 
-    0xBB LOAD_M (0x0B)     ; Carrega o contador i
-    0xBC SUB 3             ; Subtrai 3 de i
-    0xBD JUMP_+M (0xB1)    ; Se i > 0, salta para o início do loop
+    0x19 LOAD_M (0x01)     ; Carrega o contador i
+    0x1A SUB 3             ; Subtrai 3 de i
+    0x1B JUMP_+M (0x0F)    ; Se i > 0, salta para o início do loop
 
-    0xBE JUMP_M (0xFF)     ; Senão salta para o fim do programa
+    0x1C JUMP_M (0x1D)     ; Senão salta para o fim do programa
 
 FIM:
-    0xFF END               ; Fim do programa
+    0x1D END               ; Fim do programa
