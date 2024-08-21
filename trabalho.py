@@ -15,6 +15,12 @@ O programa dará origem a um arquivo chamado 'memoria_ajustada.ias', na qual oco
 dados e instruções dispostas no arquivo de memória passado como argumento.
 '''
 
+'''
+Foi criado um registrador de uso geral chamado 'NAR' (Next Adress Registrator), o qual armazena o endereço
+que está logo após o endereço do MAR (foi utilizado no algoritmo de Selection Sort).
+O endereço do MAR em questão não é de instrução no momento dessa atribuição.
+'''
+
 # Função principal ----------------------------------------------------------------------------------------
 
 def main() -> None:
@@ -37,13 +43,14 @@ def main() -> None:
 # Função de processamento ---------------------------------------------------------------------------------
 
 def ciclo_ias(memoria: io.TextIOWrapper, endereco_instrucao: str) -> None:
-    # Registradores 
+    # Registradores
     PC: str = endereco_instrucao
-    AC: int = 0; MQ: int = 0; C: int = 0; Z: int = 0; R: int = 0
+    AC: int = 0; MQ: int = 0; NAR: str = '';
+    C: int = 0; Z: int = 0; R: int = 0
     MBR: str = ''; MAR: str = ''; IR: str = ''
 
     print('\nValores Iniciais:')
-    imprime_registradores(AC, MQ, C, Z, R, PC, MBR, MAR, IR)
+    imprime_registradores(AC, MQ, C, Z, R, PC, MBR, MAR, IR, NAR)
     prox = input('\nPara a execução de cada instrução, aperte [ENTER]')
 
     while IR != 'END':
@@ -66,11 +73,13 @@ def ciclo_ias(memoria: io.TextIOWrapper, endereco_instrucao: str) -> None:
                 Z = verifica_sinal(AC)
 
             if IR == 'LOAD_M':
+                NAR = hex((int(MAR, 0) + 1))
                 MBR = load(memoria, int(MAR, 0))
-                AC = int(MBR)
+                C, AC = verifica_carry(int(MBR))
                 Z = verifica_sinal(AC)
             
             elif IR == 'LOAD_-M':
+                NAR = hex((int(MAR, 0) + 1))
                 MBR = load(memoria, int(MAR, 0))
                 C, AC = verifica_carry(-int(MBR))
                 Z = verifica_sinal(AC)
@@ -78,12 +87,21 @@ def ciclo_ias(memoria: io.TextIOWrapper, endereco_instrucao: str) -> None:
             elif IR == 'LOAD_MQ':
                 C, AC = verifica_carry(MQ)
                 Z = verifica_sinal(AC)
+            
+            elif IR == 'LOAD_NAR':
+                MAR = NAR
+                NAR = hex((int(MAR, 0) + 1))
+                MBR = load(memoria, int(MAR, 0))
+                C, AC = verifica_carry(int(MBR))
+                Z = verifica_sinal(AC)
 
             elif IR == 'LOAD_MQ_M':
+                NAR = hex((int(MAR, 0) + 1))
                 MBR = load(memoria, int(MAR, 0))
                 MQ = int(MBR)
 
             elif IR == 'STORE_M':
+                NAR = hex((int(MAR, 0) + 1))
                 MBR = AC
                 store(memoria, int(MAR, 0), int(MBR))
 
@@ -94,6 +112,7 @@ def ciclo_ias(memoria: io.TextIOWrapper, endereco_instrucao: str) -> None:
                 Z = verifica_sinal(AC)
 
             elif IR == 'ADD_M':
+                NAR = hex((int(MAR, 0) + 1))
                 MBR = load(memoria, int(MAR, 0))
                 AC = AC + int(MBR)
                 C, AC = verifica_carry(AC)
@@ -105,6 +124,7 @@ def ciclo_ias(memoria: io.TextIOWrapper, endereco_instrucao: str) -> None:
                 Z = verifica_sinal(AC)
 
             elif IR == 'SUB_M':
+                NAR = hex((int(MAR, 0) + 1))
                 MBR = load(memoria, int(MAR, 0))
                 AC = AC - int(MBR)
                 C, AC = verifica_carry(AC)
@@ -115,6 +135,7 @@ def ciclo_ias(memoria: io.TextIOWrapper, endereco_instrucao: str) -> None:
                 C, MQ = verifica_carry(MQ)
 
             elif IR == 'MUL_M':
+                NAR = hex((int(MAR, 0) + 1))
                 MBR = load(memoria, int(MAR, 0))
                 MQ = MQ * int(MBR)
                 C, MQ = verifica_carry(MQ)
@@ -126,6 +147,7 @@ def ciclo_ias(memoria: io.TextIOWrapper, endereco_instrucao: str) -> None:
                 Z = verifica_sinal(AC)
 
             elif IR == 'DIV_M':
+                NAR = hex((int(MAR, 0) + 1))
                 MBR = load(memoria, int(MAR, 0))
                 R = AC % int(MBR)
                 AC = AC // int(MBR)
@@ -149,7 +171,7 @@ def ciclo_ias(memoria: io.TextIOWrapper, endereco_instrucao: str) -> None:
                 print('ERRO NA MEMÓRIA!')
             
             # Impressão de Registradores:
-            imprime_registradores(AC, MQ, C, Z, R, PC, MBR, MAR, IR)
+            imprime_registradores(AC, MQ, C, Z, R, PC, MBR, MAR, IR, NAR)
 
             # Continuar ciclo:
             prox = input('\nPara a execução da próxima instrução, aperte [ENTER]')
@@ -203,11 +225,11 @@ def verifica_carry(reg: int) -> tuple[int, int]:
 
 # Função que imprime os registradores ----------------------------------------------------------------------
 
-def imprime_registradores(ac: int, mq: int, c: int, z: int, r: int, pc: str, mbr: str, mar: str, ir: str) -> None:
+def imprime_registradores(ac: int, mq: int, c: int, z: int, r: int, pc: str, mbr: str, mar: str, ir: str, nar: str) -> None:
     ''' Função que imprime os registradores usados no ciclo de instrução. '''
     print('\nPC: ' + pc)
-    print('MBR: ' + str(mbr) + ' | MAR: ' + mar + ' | IR: ' + ir)
-    print('AC: ' + str(ac) + ' | MQ: ' + str(mq))
+    print('MBR: ' + str(mbr) + ' | IR: ' + ir + ' | MAR: ' + mar )
+    print('AC: ' + str(ac) + ' | MQ: ' + str(mq) + ' | NAR: ' + nar)
     print('C: ' + str(c) + ' | Z: ' + str(z) + ' | R: ' + str(r))
     return None
 
