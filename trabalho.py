@@ -39,11 +39,11 @@ def main() -> None:
 def ciclo_ias(memoria: io.TextIOWrapper, endereco_instrucao: str) -> None:
     # Registradores 
     PC: str = endereco_instrucao
-    AC: int = 0; MQ: int = 0; C: int = 0; Z: int = 0; R: int = 0; AI: int = 0
+    AC: int = 0; MQ: int = 0; C: int = 0; Z: int = 0; R: int = 0
     MBR: str = ''; MAR: str = ''; IR: str = ''
 
     print('\nValores Iniciais:')
-    imprime_registradores(AC, MQ, C, Z, R, PC, MBR, MAR, IR, AI)
+    imprime_registradores(AC, MQ, C, Z, R, PC, MBR, MAR, IR)
     prox = input('\nPara a execução de cada instrução, aperte [ENTER]')
 
     while IR != 'END':
@@ -55,8 +55,6 @@ def ciclo_ias(memoria: io.TextIOWrapper, endereco_instrucao: str) -> None:
             if len(MBR.split()) > 2:
                 if MBR.split()[2][0] == '(':
                     MAR = MBR.split()[2][1:5]
-                else:
-                    AI = int(MBR.split()[2])
 
             # Incrementando PC:
             PC = hex(int(PC, 0) + 1)
@@ -64,7 +62,7 @@ def ciclo_ias(memoria: io.TextIOWrapper, endereco_instrucao: str) -> None:
             # Execução da instrução:
             # Transferência de Dados
             if IR == 'LOAD':
-                C, AC = verifica_carry(AI)
+                C, AC = verifica_carry(int(MBR.split()[2]))
                 Z = verifica_sinal(AC)
 
             if IR == 'LOAD_M':
@@ -91,7 +89,7 @@ def ciclo_ias(memoria: io.TextIOWrapper, endereco_instrucao: str) -> None:
 
             # Aritmética de Dados
             elif IR == 'ADD':
-                AC = AC + AI
+                AC = AC + int(MBR.split()[2])
                 C, AC = verifica_carry(AC)
                 Z = verifica_sinal(AC)
 
@@ -102,7 +100,7 @@ def ciclo_ias(memoria: io.TextIOWrapper, endereco_instrucao: str) -> None:
                 Z = verifica_sinal(AC)
 
             elif IR == 'SUB':
-                AC = AC - AI
+                AC = AC - int(MBR.split()[2])
                 C, AC = verifica_carry(AC)
                 Z = verifica_sinal(AC)
 
@@ -113,15 +111,17 @@ def ciclo_ias(memoria: io.TextIOWrapper, endereco_instrucao: str) -> None:
                 Z = verifica_sinal(AC)
 
             elif IR == 'MUL':
-                MQ = MQ * AI
+                MQ = MQ * int(MBR.split()[2])
+                C, MQ = verifica_carry(MQ)
 
             elif IR == 'MUL_M':
                 MBR = load(memoria, int(MAR, 0))
                 MQ = MQ * int(MBR)
+                C, MQ = verifica_carry(MQ)
 
             elif IR == 'DIV':
-                R = AC % AI
-                AC = AC // AI
+                R = AC % int(MBR.split()[2])
+                AC = AC // int(MBR.split()[2])
                 C, AC = verifica_carry(AC)
                 Z = verifica_sinal(AC)
 
@@ -149,7 +149,7 @@ def ciclo_ias(memoria: io.TextIOWrapper, endereco_instrucao: str) -> None:
                 print('ERRO NA MEMÓRIA!')
             
             # Impressão de Registradores:
-            imprime_registradores(AC, MQ, C, Z, R, PC, MBR, MAR, IR, AI)
+            imprime_registradores(AC, MQ, C, Z, R, PC, MBR, MAR, IR)
 
             # Continuar ciclo:
             prox = input('\nPara a execução da próxima instrução, aperte [ENTER]')
@@ -203,11 +203,11 @@ def verifica_carry(reg: int) -> tuple[int, int]:
 
 # Função que imprime os registradores ----------------------------------------------------------------------
 
-def imprime_registradores(ac: int, mq: int, c: int, z: int, r: int, pc: str, mbr: str, mar: str, ir: str, ai: int) -> None:
+def imprime_registradores(ac: int, mq: int, c: int, z: int, r: int, pc: str, mbr: str, mar: str, ir: str) -> None:
     ''' Função que imprime os registradores usados no ciclo de instrução. '''
     print('\nPC: ' + pc)
     print('MBR: ' + str(mbr) + ' | MAR: ' + mar + ' | IR: ' + ir)
-    print('AC: ' + str(ac) + ' | MQ: ' + str(mq) + ' | AI: ' + str(ai))
+    print('AC: ' + str(ac) + ' | MQ: ' + str(mq))
     print('C: ' + str(c) + ' | Z: ' + str(z) + ' | R: ' + str(r))
     return None
 
