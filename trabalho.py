@@ -49,6 +49,9 @@ def ciclo_ias(memoria: io.TextIOWrapper, endereco_instrucao: str) -> None:
     C: int = 0; Z: int = 0; R: int = 0
     MBR: str = ''; MAR: str = ''; IR: str = ''
 
+    # Lista que guarda os endereços do vetor a ser ordenado pelo selection sort.
+    vetor = ['0x00', '0x01', '0x02', '0x03', '0x04', '0x05', '0x06', '0x07', '0x08', '0x09']
+
     print('\nValores Iniciais:')
     imprime_registradores(AC, MQ, C, Z, R, PC, MBR, MAR, IR, NAR)
     prox = input('\nPara a execução de cada instrução, aperte [ENTER]')
@@ -62,6 +65,9 @@ def ciclo_ias(memoria: io.TextIOWrapper, endereco_instrucao: str) -> None:
             if len(MBR.split()) > 2:
                 if MBR.split()[2][0] == '(':
                     MAR = MBR.split()[2][1:5]
+                elif MBR.split()[2][0] == '*':
+                    print(leitura_memoria(memoria, int(MBR.split()[2][1:-1], 0)))
+                    MAR = vetor[int(leitura_memoria(memoria, int(MBR.split()[2][1:-1], 0)).split()[1])]
 
             # Incrementando PC:
             PC = hex(int(PC, 0) + 1)
