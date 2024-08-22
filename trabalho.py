@@ -28,7 +28,7 @@ def main() -> None:
     if len(argv) == 3:
         try:
             # memoria = open(nome_arquivo_memoria, 'r+')
-            memoria_aberta = open(argv[1], 'r')
+            memoria_aberta = open(argv[1], 'r', encoding="utf8")
         except FileNotFoundError:
             print("\nERRO: Arquivo de memória não encontrado.")
         else:
@@ -66,7 +66,6 @@ def ciclo_ias(memoria: io.TextIOWrapper, endereco_instrucao: str) -> None:
                 if MBR.split()[2][0] == '(':
                     MAR = MBR.split()[2][1:5]
                 elif MBR.split()[2][0] == '*':
-                    print(leitura_memoria(memoria, int(MBR.split()[2][1:-1], 0)))
                     MAR = vetor[int(leitura_memoria(memoria, int(MBR.split()[2][1:-1], 0)).split()[1])]
 
             # Incrementando PC:

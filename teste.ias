@@ -1,64 +1,87 @@
 0x00 20
 0x01 2
 0x02 13
-0x03 0
-0x04 29
-0x05 32
-0x06 8
-0x07 10
-0x08 16
-0x09 13
-0x0A
-0x0B
-0x0C
-0x0D 10                                                                        (tam_vetor)
-0x0E 0                                                               (início da parte desordenada)
-0x0F                                                       (m - quantos elementos a ver na parte desordenada)
-0x10                                                                  (menor da parte desordenada)
-0x11                                                              (número a ser comparado com o menor)
-0X12                                                                  (auxiliar pra fazer switch)
-0x13
-0x14
-0x15
-0x16
-0x17 LOAD_M (0x0D)                                                               quantos ainda restam
-0x18 SUB 1                                                     
-0x19 STORE_M (0x0D)
-0x1A JUMP_+M (0x1C)
-0x1B JUMP_M () END
-0x1C LOAD_M *0x0E*                                                setup do percorrer
-0x1D STORE_M (0x10)
-0x1E JUMP_M (0x1F)
-0x1F LOAD_M (0x0D)                                             percorrendo o vetor
-0x20 STORE_M (0x0F)
-0x21 JUMP_+M (0x23)
-0x22 JUMP_M (0x17)
-0x23 LOAD_M (0x0E)                                                        ver o proximo
-0x24 ADD 1
-0x25 STORE_M (0x0E)
-0x26 LOAD_M *0x0E*
-0x27 STORE_M (0x11)
-0x28 JUMP_M (0x29)
-0x29 LOAD_M (0x10)                                                 comparacao
-0x2A SUB_M (0x11)
-0x2C SUB 1
-0x2D JUMP_+M (0x35)
-0x2E LOAD_M (0x0F)
-0x2F SUB 1
-0x30 STORE_M (0x0F)
-0x31 LOAD_M (0x0E)
-0x32 ADD 1
-0x33 STORE_M (0x0E)
-0x34 JUMP_M (0x23)
-0x35 LOAD_M (0x11)                                                              substituição
-0x36 STORE_M (0x10)
-0x37 LOAD_M (0x0F)
-0x38 SUB 1
-0x39 STORE_M (0x0F)
-0x3A LOAD_M (0x0E)
-0x3B ADD 1
-0x3C STORE_M (0x0E)
-0x3D JUMP_M (0x23)
-
-
-# FAZER O SWITCH E FAZER O END DEPOIS
+0x03
+0x04
+0x05
+0x06
+0x07
+0x08
+0x09
+0x0A 
+0x0B 
+0x0C 
+0x0D 3                                                                                          i TAMANHO DO VETOR
+0x0E 0                                                                                          j ÍNDICE DO INÍCIO DA PARTE DESORDENADA
+0x0F                                                                                            k QUANTOS ELEMENTOS AINDA RESTAM COMPARAR NA ROTINA DE SELECTION SORT
+0x10                                                                                            A VALOR MENOR DA PARTE DESORDENADA
+0x11                                                                                            B VALOR DA PARTE DESORDENADA QUE SERÁ COMPARADO
+0x12                                                                                            C MEMÓRIA AUXILIAR NA ROTINA DE SWITCH
+0x13                                                                                           [] ÍNDICE DO VALOR MENOR DA PARTE DESORDENADA
+0x14                                                                                           [] ÍNDICE DO VALOR DA PARTE DESORDENADA QUE SERÁ COMPARADO
+0x15 
+0x16 
+0x17 
+0x18 
+0x19 
+0x1A 
+0x1B 
+0x1C 
+0x1D 
+0x1E 
+0x1F 
+0x20 LOAD_M (0x0D)                                                                                (0x20) ROTINA QUE TRATA LOOP CONTADOR
+0x21 SUB 1
+0x22 STORE_M (0x0D)
+0x23 JUMP_+M (0x25)                                                                                      (Rotina da primeira análise)
+0x24 JUMP_M (0x56)                                                                                       (Fim)
+0x25 LOAD_M (0x0D)                                                                                (0x25) PRIMEIRA ROTINA QUE ANALISA SE HÁ ELEMENTOS A PERCORRER
+0x26 SUB 1
+0x27 STORE_M (0x0F)
+0x28 JUMP_+M (0x2A)                                                                                      (Rotina da primeira comparação)
+0x29 JUMP_M (0x4C)                                                                                       (Rotina de Switch)
+0x2A LOAD_M (0x0E)                                                                                (0x2A) PRIMEIRA COMPARAÇÃO
+0x2B STORE_M (0x13)
+0x2C LOAD_M *0x13*
+0x2D STORE_M (0x10)
+0x2E LOAD_M (0x13)
+0x2F ADD 1
+0x30 STORE_M (0x14)
+0x31 LOAD_M *0x14*
+0x32 STORE_M (0x11)
+0x33 LOAD_M (0x10)
+0x34 SUB_M (0x11)
+0x35 SUB 1
+0x36 JUMP_+M (0x47)                                                                                      (Rotina de trocar o menor)
+0x37 JUMP_M (0x38)                                                                                       (Rotina de verificar se há mais elementos a percorrer)
+0x38 LOAD_M (0x0F)                                                                                (0x38) VERIFICAR SE HÁ MAIS ELEMENTOS A PERCORRER
+0x39 SUB 1
+0x3A STORE_M (0x0F)
+0x3B JUMP_+M (0x3D)                                                                                      (Rotina do Restante das Comparações)
+0x3C JUMP_M (0x4C)                                                                                       (Rotina de Switch)
+0x3D LOAD_M (0x14)                                                                                (0x3D) RESTANTE DAS COMPARAÇÕES
+0x3E ADD 1
+0x3F STORE_M (0x14)
+0x40 LOAD_M *0x14*
+0x41 STORE_M (0x11)
+0x42 LOAD_M (0x10)
+0x43 SUB_M (0x11)
+0x44 SUB 1
+0x45 JUMP_+M (0x47)                                                                                      (Rotina de trocar o menor)
+0x46 JUMP_M (0x38)                                                                                       (Rotina de verificar se há mais elementos a percorrer)
+0x47 LOAD_M (0x11)                                                                                (0x47) TROCAR O MENOR
+0x48 STORE_M (0x10)
+0x49 LOAD_M (0x14)
+0x4A STORE_M (0x13)
+0x4B JUMP_M (0x38)                                                                                       (Rotina de verificar se há mais elementos a percorrer)
+0x4C LOAD_M (0x0E)                                                                                (0x4C) SWITCH
+0x4D STORE_M (0x12)
+0x4E LOAD_M (0x10)
+0x4F STORE_M (0x0E)
+0x50 LOAD_M (0x12)
+0x51 STORE_M *0x13*
+0x52 LOAD_M (0x0E)
+0x53 ADD 1
+0x54 STORE_M (0x0E)
+0x55 JUMP_M (0x20)                                                                                       (Rotina que trata loop contador)
+0x56 END                                                                                          (0x56) END
