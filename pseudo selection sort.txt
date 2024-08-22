@@ -10,7 +10,7 @@ memória auxiliar para fazer switch: 0x12
 
 Rotina que trata loop contador
 0x20 LOAD_M (0x0D) -> Carrega tamanho do vetor
-0x21 SUB 1 -> Tira 1 do tamanho do vetor (age como contador)
+0x21 SUB 2 -> Tira 2 do tamanho do vetor (age como contador)
 0x22 STORE_M (0x0D) -> Devolve o valor atualizado ao endereço
 0x23 JUMP_+M (Rotina de Setup) -> Se for 0 ou mais, rotina de selection
 0x24 JUMP_M (END) -> Se o contador acabou, vetor foi ordenado
@@ -25,7 +25,6 @@ Rotina que trata loop contador
 
 Quantos elementos serão percorridos
 0x30 LOAD_M (0x0D) -> Carrega tamanho do vetor desordenado
-0x3aaaaa  SUB 1
 0x31 STORE_M (0x0F) -> Guarda em 'quantos elementos restam a checar'
 0x32 JUMP_+M (Rotina de Setup) -> Se ainda há elementos, Setup pra checar
 0x33 JUMP_M (Rotina de Switch) -> Terminou selection
@@ -117,13 +116,13 @@ Troca quando descobre-se um novo menor
 0x8F 
 
 Switch
-0x90 LOAD_M (0x0E) -> Carregar o valor no índice do primeiro desordenado
+0x90 LOAD_M (0x0E) -> Carregar o valor do índice do primeiro desordenado
 0x91 STORE_M (0x12) -> Guardar provisoriamente
-0x92 LOAD_M (0x10) -> Carregar o valor menor da parte desordenada
-0x93 STORE_M (0x0E) -> Guardar no valor do índice do primeiro desordenado
-0x94 LOAD_M (0x12) -> Valor guardado provisoriamente)
-0x95 STORE_M *0x13* -> Guardar no valor que o menor estava
-0x96 LOAD_M (0x0E) -> Carrega o índice do primeiro desordenado
+0x92 LOAD_M (0x10) -> Carregar o valor do menor da parte desordenada
+0x93 STORE_M *0x0E* -> Guardar no valor do índice do primeiro desordenado
+0x94 LOAD_M (0x12) -> Valor guardado provisoriamente
+0x95 STORE_M *0x13* -> Guardar no indice do valor que o menor estava
+0x96 LOAD_M (0x0E) -> Carrega o índice do menor da parte desordenada
 0x97 ADD 1 -> Incrementa o índice
 0x98 STORE_M (0x0E) -> Retorna o índice atualizado
 0x99 JUMP_M (Rotina que trata loop contador)
