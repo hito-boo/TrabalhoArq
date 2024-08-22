@@ -1,0 +1,145 @@
+tamanho do vetor: 0x0D - começa em 10
+índice do início da parte desordenada: 0x0E - começa em 0
+quantos elementos ainda restam a checar: 0x0F
+'menor' da parte desordenada: 0x10
+número que será comparado com o menor: 0x11
+memória auxiliar para fazer switch: 0x12
+índice do menor da parte desordenada no vetor: 0x13
+índice do elemento que será comparado: 0x14
+
+
+Rotina que trata loop contador
+0x20 LOAD_M (0x0D) -> Carrega tamanho do vetor
+0x21 SUB 1 -> Tira 1 do tamanho do vetor (age como contador)
+0x22 STORE_M (0x0D) -> Devolve o valor atualizado ao endereço
+0x23 JUMP_+M (Rotina de Setup) -> Se for 0 ou mais, rotina de selection
+0x24 JUMP_M (END) -> Se o contador acabou, vetor foi ordenado
+0x25 
+0x26 
+0x27 
+0x28 
+0x29 
+0x2A 
+0x2B 
+0x2C 
+
+Quantos elementos serão percorridos
+0x30 LOAD_M (0x0D) -> Carrega tamanho do vetor desordenado
+0x3aaaaa  SUB 1
+0x31 STORE_M (0x0F) -> Guarda em 'quantos elementos restam a checar'
+0x32 JUMP_+M (Rotina de Setup) -> Se ainda há elementos, Setup pra checar
+0x33 JUMP_M (Rotina de Switch) -> Terminou selection
+0x34 
+0x35 
+0x36 
+0x37 
+0x38 
+
+Rotina de Setup - Primeira comparação
+0x39 LOAD_M (0x0E) -> Carrega o índice do primeiro desordenado
+0x3A STORE_M (0x13) -> Guarda no índice do menor
+0x3B LOAD_M *0x13* -> Carrega o valor do índice do menor
+0x3D STORE_M (0x10) -> Guarda o valor no 'menor' da parte desordenada
+0x3C LOAD_M (0x13) -> Carrega o índice do menor
+0x3E ADD 1 -> Adiciona 1 pra pegar o próximo
+0x3F STORE_M (0x14) -> Guarda no índice do que será comparado
+0x40 LOAD_M *0x14* -> Carrega o valor do índice do que será comparado
+0x41 STORE_M (0x11) -> Guarda o valor no que será comparado
+primeira comparação
+0x42 LOAD_M (0x10) -> Carrega o valor do menor
+0x43 SUB_M (0x11) -> Subtrai o que há no a ser comparado
+0x44 SUB 1 -> Subtrai mais uma unidade (caso tenha dado 0)
+0x45 JUMP_+M (Rotina de trocar o menor na rotina de comparação)
+0x46 JUMP_M (Rotina de verificar se há mais elementos a percorrer)
+0x47 
+0x48 
+0x49 
+0x4A
+0x4B 
+0x4C
+0x4D
+0x4E
+0x4F
+
+Verificação de percorrer mais elementos
+0x70 LOAD_M (0x0F) -> Carregar quantos elementos ainda restam a checar
+0x71 SUB 1 -> Tirar 1 dos elementos a checar
+0x72 STORE_M (0x0F) -> Devolver o valor atualizado
+0x73 JUMP_+M (Rotina do Restante das Comparações) -> Se ainda não acabou
+0x74 JUMP_M (Rotina de Switch) -> Acabou selection, ir pra switch
+0x75 
+0x76 
+0x77 
+0x78 
+0x79 
+0x7A 
+0x7B 
+0x7C 
+0x7D 
+0x7E 
+0x7F 
+
+Rotina do restante das comparações
+0x50 LOAD_M (0x14) -> Carrega o índice do que foi comparado
+0x51 ADD 1 -> Adiciona 1
+0x52 STORE_M (0x14) -> Devolve o índice daquele a ser comparado
+0x53 LOAD_M *0x14* -> Carrega o valor daquele no índice a ser comparado
+0x54 STORE_M (0x11) -> Guarda o valor no que será comparado
+0x55 LOAD_M (0x10) -> Carrega o valor menor
+0x56 SUB_M (0x11) -> Subtrai o valor que está pra comparar
+0x57 SUB 1 -> Subtrai mais uma unidade (caso tenha dado 0)
+0x58 JUMP_+M (Rotina de trocar o menor na rotina de comparação)
+0x59 JUMP_M (Rotina de verificar se há mais elementos a percorrer)
+0x5A 
+0x5B 
+0x5C 
+0x5D 
+0x5E 
+0x5F 
+0x60 
+
+Troca quando descobre-se um novo menor
+0x80 LOAD_M (0x11) -> Carrega o valor que foi comparado
+0x81 STORE_M (0x10) -> Guarda o valor no menor (é o novo menor)
+0x82 LOAD_M (0x14) -> Carrega o índice do que foi comparado
+0x83 STORE_M (0x13) -> Guarda o índice comparado no índice do menor
+0x84 JUMP_M (Verificação de percorrer mais elementos)
+0x85 
+0x86 
+0x87 
+0x88 
+0x89 
+0x8A 
+0x8B 
+0x8C 
+0x8D 
+0x8E 
+0x8F 
+
+Switch
+0x90 LOAD_M (0x0E) -> Carregar o valor no índice do primeiro desordenado
+0x91 STORE_M (0x12) -> Guardar provisoriamente
+0x92 LOAD_M (0x10) -> Carregar o valor menor da parte desordenada
+0x93 STORE_M (0x0E) -> Guardar no valor do índice do primeiro desordenado
+0x94 LOAD_M (0x12) -> Valor guardado provisoriamente)
+0x95 STORE_M *0x13* -> Guardar no valor que o menor estava
+0x96 LOAD_M (0x0E) -> Carrega o índice do primeiro desordenado
+0x97 ADD 1 -> Incrementa o índice
+0x98 STORE_M (0x0E) -> Retorna o índice atualizado
+0x99 JUMP_M (Rotina que trata loop contador)
+0x9A 
+0x9B 
+0x9C 
+0x9D 
+0x9E 
+0x9F 
+
+
+tamanho do vetor: 0x0D - começa em 10
+índice do início da parte desordenada: 0x0E - começa em 0
+quantos elementos ainda restam a checar: 0x0F
+'menor' da parte desordenada: 0x10
+número que será comparado com o menor: 0x11
+memória auxiliar para fazer switch: 0x12
+índice do menor da parte desordenada no vetor: 0x13
+índice do elemento que será comparado: 0x14
