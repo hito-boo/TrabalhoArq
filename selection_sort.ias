@@ -27,10 +27,10 @@
 0x1A 
 0x1B 
 0x1C 
-0x1D 
-0x1E 
-0x1F 
-0x20 LOAD_M (0x0D)                                                                                (0x20) ROTINA QUE TRATA LOOP CONTADOR
+0x1D LOAD_M (0x0D)                                                                                (0x1D) PRIMEIRA INSTRUÇÃO
+0x1E SUB 1
+0x1F STORE_M (0x0D)
+0x20 LOAD_M (0x0D)                                                                                (0x20) LOOP CONTADOR
 0x21 SUB 1
 0x22 STORE_M (0x0D)
 0x23 JUMP_+M (0x25)                                                                                      (Rotina da primeira análise)
@@ -38,7 +38,7 @@
 0x25 LOAD_M (0x0D)                                                                                (0x25) PRIMEIRA ROTINA QUE ANALISA SE HÁ ELEMENTOS A PERCORRER
 0x26 STORE_M (0x0F)
 0x27 JUMP_+M (0x29)                                                                                      (Rotina da primeira comparação)
-0x28 JUMP_M (0x46)                                                                                       (Rotina de Switch)
+0x28 JUMP_M (0x4B)                                                                                       (Rotina de Switch)
 0x29 LOAD_M (0x0E)                                                                                (0x29) PRIMEIRA COMPARAÇÃO
 0x2A STORE_M (0x13)
 0x2B LOAD_M *0x13*
@@ -57,7 +57,7 @@
 0x38 SUB 1
 0x39 STORE_M (0x0F)
 0x3A JUMP_+M (0x3C)                                                                                      (Rotina do Restante das Comparações)
-0x3B JUMP_M (0x46)                                                                                       (Rotina de Switch)
+0x3B JUMP_M (0x4B)                                                                                       (Rotina de Switch)
 0x3C LOAD_M (0x14)                                                                                (0x3C) RESTANTE DAS COMPARAÇÕES
 0x3D ADD 1
 0x3E STORE_M (0x14)
@@ -73,14 +73,14 @@
 0x48 LOAD_M (0x14)
 0x49 STORE_M (0x13)
 0x4A JUMP_M (0x37)                                                                                       (Rotina de verificar se há mais elementos a percorrer)
-0x4B LOAD_M (0x0E)                                                                                (0x46) SWITCH
+0x4B LOAD_M *0x0E*                                                                                (0x4B) SWITCH
 0x4C STORE_M (0x12)
 0x4D LOAD_M (0x10)
-0x4E STORE_M (0x0E)
+0x4E STORE_M *0x0E*
 0x4F LOAD_M (0x12)
 0x50 STORE_M *0x13*
 0x51 LOAD_M (0x0E)
 0x52 ADD 1
 0x53 STORE_M (0x0E)
-0x54 JUMP_M (0x20)                                                                                       (Rotina que trata loop contador)
+0x54 JUMP_M (0x20)                                                                                       (Rotina que desenvolve loop contador)
 0x55 END                                                                                          (0x55) END

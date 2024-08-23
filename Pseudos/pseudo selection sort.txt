@@ -116,7 +116,7 @@ Troca quando descobre-se um novo menor
 0x8F 
 
 Switch
-0x90 LOAD_M (0x0E) -> Carregar o valor do índice do primeiro desordenado
+0x90 LOAD_M *0x0E* -> Carregar o valor do índice do primeiro desordenado
 0x91 STORE_M (0x12) -> Guardar provisoriamente
 0x92 LOAD_M (0x10) -> Carregar o valor do menor da parte desordenada
 0x93 STORE_M *0x0E* -> Guardar no valor do índice do primeiro desordenado
