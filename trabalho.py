@@ -10,11 +10,11 @@ Abrir o arquivo da seguinte forma: python trabalho.py nome_arquivo_memoria ender
 O programa dará origem a um arquivo chamado 'memoria_ajustada.ias', no qual ocorrerá o processamento dos dados e instruções
 dispostas no arquivo de memória passado como argumento.
 
-# trabalho.py selection_sort.ias 0x1D 10
+# python trabalho.py selection_sort.ias 0x1D 10
 O algoritmo de Selection Sort está disposto no arquivo 'selection_sort.ias', o qual possui sua primeira instrução no
 endereço 0x1D e um vetor de tamanho 10.
 
-# trabalho.py fibonacci.ias 0x05 0
+# python trabalho.py fibonacci.ias 0x05 0
 O segundo algoritmo implementado foi um que fornece o elemento n = 7 da Sequência de Fibonacci e está disposto no arquivo
 'fibonacci.ias', o qual não exige vetor e possui o seu resultado sendo o último dado disposto dos endereços de dados.
 '''
